@@ -26,7 +26,7 @@ class food(db.Model):
     name = db.Column(db.String(100))
     price = db.Column(db.Float)
 
-    def __init__(self, name, price):
+    def __repr__(self, name, price):
         self.name = name
         self.price = price
 
@@ -42,17 +42,25 @@ foods_schema = foodSchema(many = True)
 #Input food item
 @app.route('/food', methods=['POST'])
 def add_food():
-    name = request.json['name']
-    price = request.json['price']
+    name = request.json["name"]
+    price = request.json["price"]
 
     print(name, price)
-    n_food = food(name, price)
+    
+    new_food = food(name = name, price = price)
 
-    db.session.add(n_food)
+    db.session.add( name = name, price = 530)
     db.session.commit()
 
-    return food_schema.jsonify(n_food)
+    return food_schema.jsonify(new_food)
 
+
+#Fetch a list of products
+@app.route('/getfood', methods=['GET'])
+def get_food():
+    allFoods = food.query.all()
+    result = foods_schema.dump(allFoods)
+    return jsonify(result)
 
 @app.route('/', methods=['GET'])
 def index():
