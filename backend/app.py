@@ -26,9 +26,9 @@ class food(db.Model):
     name = db.Column(db.String(100))
     price = db.Column(db.Float)
 
-    def __repr__(self, name, price):
-        self.name = name
-        self.price = price
+    # def __init__(self, name, price):
+    #     self.name = name
+    #     self.price = price
 
 #Schema
 class foodSchema(ma.Schema):
@@ -49,10 +49,10 @@ def add_food():
     
     new_food = food(name = name, price = price)
 
-    db.session.add( name = name, price = 530)
+    db.session.add(new_food)
     db.session.commit()
 
-    return food_schema.jsonify(new_food)
+    return get_food()
 
 
 #Fetch a list of products
