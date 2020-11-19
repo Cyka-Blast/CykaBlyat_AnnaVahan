@@ -23,16 +23,17 @@ ma = Marshmallow(app)
 #Init food class and model
 class food(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(200))
     price = db.Column(db.Float)
 
-    # def __init__(self, name, price):
-    #     self.name = name
-    #     self.price = price
+    def __init__(self, name , price):
+        self.name = name
+        self.price = price
+        
 
 #Schema
 class foodSchema(ma.Schema):
-    class meta:
+    class Meta:
         fields = ('id', 'name', 'price')
 
 #Init Schema
@@ -47,12 +48,12 @@ def add_food():
 
     print(name, price)
     
-    new_food = food(name = name, price = price)
+    nfood = food(name = name, price = price)
 
-    db.session.add(new_food)
+    db.session.add(nfood)
     db.session.commit()
 
-    return get_food()
+    return food_schema.jsonify(nfood)
 
 
 #Fetch a list of products
