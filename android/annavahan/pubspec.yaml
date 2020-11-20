@@ -25,6 +25,8 @@ dependencies:
     sdk: flutter
   geolocator: ^6.1.4
   http: ^0.12.2
+  flutter_map: ^0.10.1+1
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -62,11 +64,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
     - family: Gotu
-      fonts: fonts/Gotu-Regular.ttf
+      fonts:
+        - asset: fonts/Gotu-Regular.ttf
     - family: Open Sans
-      fonts: fonts/OpenSans-Regular.ttf
+      fonts:
+        - asset: fonts/OpenSans-Regular.ttf
   #  - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

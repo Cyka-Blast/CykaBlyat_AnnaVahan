@@ -5,9 +5,18 @@ AppBar appBar = AppBar(
   title: Text(
     properties.title,
     style: TextStyle(
-      fontSize: 20,
-      letterSpacing: 2.5,
-      fontFamily: 'Chelsea Market',
+      fontSize: 22,
+      letterSpacing: 1.0,
+      fontFamily: 'Gotu',
+      color: properties.white,
+      fontWeight: FontWeight.bold,
     ),
+  ),
+  backgroundColor: properties.primary,
+  centerTitle: true,
+  elevation: 0,
+  shadowColor: properties.primary,
+  iconTheme: IconThemeData(
+    color: properties.white,
   ),
 );
