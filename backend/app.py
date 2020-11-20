@@ -1,5 +1,6 @@
 from os import name
 from flask import Flask, request, jsonify
+from flask import json
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
@@ -116,7 +117,11 @@ def add_business():
     return business_Schema.jsonify(nbus)
 
 
-
+@app.route('/client', methods=['GET'])
+def get_client():
+    id = 1
+    client = Client.query.filter_by(id)
+    return clientSchema.jsonify(client)
 
 #Fetch a list of businesses
 @app.route('/business', methods=['GET'])
