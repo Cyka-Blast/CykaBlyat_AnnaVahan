@@ -86,6 +86,8 @@ class Com(db.Model):
 class Deli(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20))
+    deli_lat = db.Column(db.String(20))
+    deli_long = db.Column(db.String(20))
 
 
 #Schema
@@ -115,7 +117,7 @@ class comSchema(ma.Schema):
 
 class deliSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'deli_lat', 'deli_long')
 
 
 #Init Schema
@@ -277,11 +279,27 @@ def get_ofood():
 @app.route('/deli', methods=['POST'])
 def add_deli():
     name = request.json['name']
+    deli_lat = request.json['latitude']
+    deli_long = request.json['longitude']
 
-    n_deli = Deli(name = name)
+    n_deli = Deli(name = name, deli_lat = deli_lat, deli_long = deli_long)
     db.session.add(n_deli)
     db.session.commit()
     return deli_schema.jsonify(n_deli)
+
+#Update delivery location
+@app.route('/udeli/<id>', methods=['PUT'])
+def up_deli(id):
+    c_deli = Deli.query.get(id)
+    latitude = request.json["latitude"]
+    longitude = request.json["longitude"]
+
+    c_deli.deli_lat = latitude
+    c_deli.deli_long = longitude
+
+    db.session.commit()
+
+    return deli_schema.jsonify(c_deli)
 
 #View delivery
 @app.route('/deli', methods=['GET'])
