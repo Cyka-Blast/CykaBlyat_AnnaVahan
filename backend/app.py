@@ -70,6 +70,7 @@ class Order(db.Model):
 class Ofood(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     food_id = db.Column(db.Integer)
+    qty = db.Column(db.Integer)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
 
@@ -79,6 +80,11 @@ class Com(db.Model):
     com_name = db.Column(db.String(200))
     com_price = db.Column(db.Integer)
     owner_id = db.Column(db.Integer,db.ForeignKey('business.id'))  
+
+#Init delivery clas and model
+class Deli(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20))
 
 
 #Schema
@@ -100,11 +106,15 @@ class orderSchema(ma.Schema):
 
 class ofoodSchema(ma.Schema):
     class Meta:
-        fields = ('food_id', 'order_id')
+        fields = ('food_id', 'order_id', 'qty')
 
 class comSchema(ma.Schema):
     class Meta:
         fields = ('id', 'com_name', 'com_price', 'owner_id')
+
+class deliSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name')
 
 
 #Init Schema
@@ -125,6 +135,10 @@ orders_schema = orderSchema(many = True)
 
 ofood_schema = ofoodSchema()
 ofoods_schema = ofoodSchema(many = True)
+
+deli_schema = deliSchema()
+delis_schema = deliSchema(many = True)
+
 
 #Input food item
 @app.route('/food', methods=['POST'])
@@ -236,7 +250,8 @@ def add_order():
     db.session.commit()
 
     for food_id in food_list:
-        n_ofood = Ofood(food_id = food_id, order = n_order)
+        food_quantity = food_list[food_id]
+        n_ofood = Ofood(food_id = food_id, order = n_order, qty = food_quantity)
         db.session.add(n_ofood)
         db.session.commit()
 
@@ -254,6 +269,24 @@ def get_order():
 def get_ofood():
     all_ofood = Ofood.query.all()
     result = ofoods_schema.dump(all_ofood)
+    return jsonify(result)
+
+
+#Add delivery
+@app.route('/deli', methods=['POST'])
+def add_deli():
+    name = request.json['name']
+
+    n_deli = Deli(name = name)
+    db.session.add(n_deli)
+    db.session.commit()
+    return deli_schema.jsonify(n_deli)
+
+#View delivery
+@app.route('/deli', methods=['GET'])
+def get_deli():
+    alldelis = Deli.query.all()
+    result = delis_schema.dump(alldelis)
     return jsonify(result)
 
 
