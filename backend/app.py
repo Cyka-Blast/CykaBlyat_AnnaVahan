@@ -258,6 +258,29 @@ def add_order():
         db.session.add(n_ofood)
         db.session.commit()
 
+    bus = Business.query.get(bus_id).jsonify()
+    bus_lat = bus["latitude"]
+    bus_long = bus["longitude"]
+    
+    
+        def get_deli_distance(bus_lat = bus_lat, bus_long = bus_long, deli_lat, deli_long):
+            bus_lat = math.radians(bus_lat)
+            bus_long = math.radians(bus_long)
+            deli_lat = math.radians(deli_lat)
+            deli_long = math.radians(deli_long)
+
+            dlon = deli_long - bus_long
+            dlat = deli_lat - bus_lat
+
+            a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
+            print(a)
+            distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+            return distance
+
+
+    
+
     return order_schema.jsonify(n_order)
 
 #Fetch a list of orders
