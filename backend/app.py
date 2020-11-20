@@ -33,7 +33,6 @@ class food(db.Model):
         self.price = price
     
 
-
 #Init business class and model
 class business(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -41,7 +40,6 @@ class business(db.Model):
     address = db.Column(db.String(200))
     latitude = db.Column(db.String(20))
     longitude = db.Column(db.String(20))
-
 
 
 #Schema
@@ -68,8 +66,6 @@ def add_food():
     name = request.json["name"]
     price = int(request.json["price"])*100
 
-    print(name, price)
-    
     nfood = food(name = name, price = price)
 
     db.session.add(nfood)
@@ -93,7 +89,6 @@ def add_business():
     address = request.json["address"]
     latitude = request.json["latitude"]
     longitude = request.json["longitude"]
-
     
     nbus = business(name = name, address = address, latitude = latitude, longitude = longitude)
 
@@ -110,6 +105,10 @@ def get_business():
     result = morebusiness_Schema.dump(allbusiness)
     return jsonify(result)
 
+
+
+
+#Testing
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({'msg':True})
