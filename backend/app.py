@@ -45,6 +45,7 @@ class Business(db.Model):
     latitude = db.Column(db.String(20))
     longitude = db.Column(db.String(20))
     foods = db.relationship('Food', backref = 'owner')
+    coms = db.relationship('Com', backref = 'owner')
 
 
 #Init client class and model
@@ -72,6 +73,14 @@ class Ofood(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
 
 
+#Init commodities class and model
+class Com(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    com_name = db.Column(db.String(200))
+    com_price = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer,db.ForeignKey('business.id'))  
+
+
 #Schema
 class foodSchema(ma.Schema):
     class Meta:
@@ -93,11 +102,17 @@ class ofoodSchema(ma.Schema):
     class Meta:
         fields = ('food_id', 'order_id')
 
+class comSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'com_name', 'com_price', 'owner_id')
 
 
 #Init Schema
 food_schema = foodSchema()
 foods_schema = foodSchema(many = True)
+
+com_schema = comSchema()
+coms_schema = comSchema(many = True)
 
 business_Schema = businessSchema()
 morebusiness_Schema = businessSchema(many = True)
@@ -132,6 +147,30 @@ def add_food():
 def get_food():
     allFoods = Food.query.all()
     result = foods_schema.dump(allFoods)
+    return jsonify(result)
+
+
+#Input commodity item
+@app.route('/com', methods=['POST'])
+def add_com():
+    name = request.json["name"]
+    price = int(request.json["price"])*100
+    tmpownerid = request.json["owner"] #parse the owner
+    print(tmpownerid)
+    owner = Business.query.filter_by(id = tmpownerid).first() #fetch the owner
+
+    ncom = Com(com_name = name, com_price = price, owner = owner)
+
+    db.session.add(ncom)
+    db.session.commit()
+
+    return com_schema.jsonify(ncom)
+
+#Fetch a list of commodities
+@app.route('/com', methods=['GET'])
+def get_com():
+    allcoms = Com.query.all()
+    result = coms_schema.dump(allcoms)
     return jsonify(result)
 
 
