@@ -45,6 +45,13 @@ class Business(db.Model):
     foods = db.relationship('Food', backref = 'owner')
 
 
+#Init client class and model
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20))
+    latitude = db.Column(db.String(20), nullable= False)
+    longitude = db.Column(db.String(20), nullable = False)    
+
 #Schema
 class foodSchema(ma.Schema):
     class Meta:
@@ -53,6 +60,11 @@ class foodSchema(ma.Schema):
 class businessSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'address', 'latitude', 'longitude')
+
+
+class clientSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'latitude', 'longitude')
 
 
 #Init Schema
@@ -102,6 +114,8 @@ def add_business():
     db.session.commit()
 
     return business_Schema.jsonify(nbus)
+
+
 
 
 #Fetch a list of businesses
