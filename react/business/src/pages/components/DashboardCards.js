@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import placeholderImg from '../../static/3957701.jpg';
 import statsImg from '../../static/undrawVisualData.svg';
 import DashboardMenu from './dashboardMenu';
+import DashboardOrder from './dashboardOrder';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -81,7 +82,7 @@ export default function DashboardCards() {
               {/* Order Items Display Card */}
               <Grid item xs={12} >
                 <Paper className={classes.innerPaperMenu} elevation={5}>
-                  Orders
+                  <DashboardOrder />
                 </Paper>
               </Grid>
             </Grid>

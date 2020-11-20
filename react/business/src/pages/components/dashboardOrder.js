@@ -1,27 +1,27 @@
 import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux';
 import * as actionCreators from '../../store/actions/actions';
-import DashboardMenuTable from './dashboardMenuTable';
+import DashboardOrderTable from './dashboardOrderTable';
 import Divider from '@material-ui/core/Divider';
 
 
-class DashboardMenu extends Component {
+class DashboardOrder extends Component {
 
-  componentDidMount() {
+  /*componentDidMount() {
     this.props.getFoodList();
     //console.log(this.props.food)
-  }
+  }*/
 
 
   render() {
 
-    const food = this.props.food;
+    const orders = this.props.orders;
     
     return (
       <div>
-        <b>Menu</b>
+        <b>Order</b>
         <Divider />
-        <DashboardMenuTable foodList={food}/>
+        <DashboardOrderTable orderList={orders}/>
       </div>
     )
   }
@@ -32,4 +32,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, actionCreators)(DashboardMenu);
+export default connect(mapStateToProps, actionCreators)(DashboardOrder);
