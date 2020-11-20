@@ -11,6 +11,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/RestaurantMenu';
 import Container from '@material-ui/core/Container';
 import { Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -35,7 +36,11 @@ const useStyles = makeStyles((theme) => ({
     height: '15vh',
     paddingTop: '5vh',
     color: theme.palette.common.white
-  }
+  },
+  link: {
+    textDecoration: "none",
+    color: theme.palette.common.white
+  },
   
 }));
 
@@ -58,12 +63,24 @@ export default function SideNav() {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {['Dashboard', 'My Menu', 'Orders'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon className={classes.listItemIcon}>{index % 2 === 0 ? <HomeIcon /> : <MenuIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+          <Link to='/' className={classes.link}>
+            <ListItem button >
+              <ListItemIcon className={classes.listItemIcon}><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Dashboard" />
             </ListItem>
-          ))}
+          </Link>
+          <Link to='/inventory' className={classes.link}>
+            <ListItem button >
+              <ListItemIcon className={classes.listItemIcon}><MenuIcon /></ListItemIcon>
+              <ListItemText primary="Inventory" />
+            </ListItem>
+          </Link>
+          <Link to='/orders' className={classes.link}>
+            <ListItem button >
+              <ListItemIcon className={classes.listItemIcon}><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Orders" />
+            </ListItem>
+          </Link>
         </List>
         
       </Drawer>

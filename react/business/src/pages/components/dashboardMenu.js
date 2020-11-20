@@ -1,9 +1,17 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux';
+import * as actionCreators from '../../store/actions/actions';
 import DashboardMenuTable from './dashboardMenuTable';
 
 
 class DashboardMenu extends Component {
+
+  componentDidMount() {
+    this.props.getFoodList();
+    //console.log(this.props.food)
+  }
+
+
   render() {
 
     const food = this.props.food;
@@ -18,9 +26,8 @@ class DashboardMenu extends Component {
 }
 
 const mapStateToProps = (state) => {
-   return {
-     food: state.food
-   }
+  return state
 }
 
-export default connect(mapStateToProps)(DashboardMenu);
+
+export default connect(mapStateToProps, actionCreators)(DashboardMenu);

@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 //import img1 from '../../static/undrawOnlineGroceries.svg';
 //import img2 from '../../static/undrawOnlineGroceriesAccent.svg';
 import placeholderImg from '../../static/3957701.jpg';
+import statsImg from '../../static/undrawVisualData.svg';
 import DashboardMenu from './dashboardMenu';
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +66,16 @@ export default function DashboardCards() {
               {/* Statistics Card */}
               <Grid item xs={6} >
                 <Paper className={classes.innerPaper} elevation={5}>
-                  Statistics Stuff with an image
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Paper>Number</Paper>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Paper>
+                        <img src={statsImg} alt="Image of statistics" className={classes.placeholderImg}/>
+                      </Paper>
+                    </Grid>
+                  </Grid>
                 </Paper>
               </Grid>
               {/* Order Items Display Card */}
