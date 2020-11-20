@@ -6,6 +6,7 @@ import os
 from flask_sqlalchemy.model import camel_to_snake_case
 
 from marshmallow.fields import Method
+from sqlalchemy.orm import backref
 
 # Init app
 app = Flask(__name__)
@@ -23,29 +24,31 @@ ma = Marshmallow(app)
 
 
 #Init food class and model
-class food(db.Model):
+class Food(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(200))
     price = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer,db.ForeignKey('business.id'))
 
-    def __init__(self, name , price):
-        self.name = name
-        self.price = price
+    # def __init__(self, name , price): #Looks like this was unnecessary
+    #     self.name = name
+    #     self.price = price
     
 
 #Init business class and model
-class business(db.Model):
+class Business(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(200))
     address = db.Column(db.String(200))
     latitude = db.Column(db.String(20))
     longitude = db.Column(db.String(20))
+    foods = db.relationship('Food', backref = 'owner')
 
 
 #Schema
 class foodSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'price')
+        fields = ('id', 'name', 'price', 'owner_id')
 
 class businessSchema(ma.Schema):
     class Meta:
@@ -65,8 +68,11 @@ morebusiness_Schema = businessSchema(many = True)
 def add_food():
     name = request.json["name"]
     price = int(request.json["price"])*100
+    tmpowner = request.json["owner"]
+    print(tmpowner)
+    owner = Business.query.filter_by(name = tmpowner).first()
 
-    nfood = food(name = name, price = price)
+    nfood = Food(name = name, price = price, owner = owner)
 
     db.session.add(nfood)
     db.session.commit()
@@ -77,7 +83,7 @@ def add_food():
 #Fetch a list of foods
 @app.route('/food', methods=['GET'])
 def get_food():
-    allFoods = food.query.all()
+    allFoods = Food.query.all()
     result = foods_schema.dump(allFoods)
     return jsonify(result)
 
@@ -90,7 +96,7 @@ def add_business():
     latitude = request.json["latitude"]
     longitude = request.json["longitude"]
     
-    nbus = business(name = name, address = address, latitude = latitude, longitude = longitude)
+    nbus = Business(name = name, address = address, latitude = latitude, longitude = longitude)
 
     db.session.add(nbus)
     db.session.commit()
@@ -101,7 +107,7 @@ def add_business():
 #Fetch a list of businesses
 @app.route('/business', methods=['GET'])
 def get_business():
-    allbusiness = business.query.all()
+    allbusiness = Business.query.all()
     result = morebusiness_Schema.dump(allbusiness)
     return jsonify(result)
 
