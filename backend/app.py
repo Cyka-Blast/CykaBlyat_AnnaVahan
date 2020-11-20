@@ -5,6 +5,7 @@ from flask import json
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
+import math
 from flask_sqlalchemy.model import camel_to_snake_case
 
 from marshmallow.fields import Method
@@ -245,7 +246,7 @@ def add_order():
     c_longitude = request.json["longitude"]
 
     n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, c_longitude = c_longitude)
-
+    print(request.json)
     db.session.add(n_order)
     db.session.commit()
 
@@ -288,6 +289,21 @@ def get_deli():
     alldelis = Deli.query.all()
     result = delis_schema.dump(alldelis)
     return jsonify(result)
+
+def get_deli_distance(bus_lat,bus_long,deli_lat,deli_long):
+    bus_lat = math.radians(bus_lat)
+    bus_long = math.radians(bus_long)
+    deli_lat = math.radians(deli_lat)
+    deli_long = math.radians(deli_long)
+
+    dlon = deli_long - bus_long
+    dlat = deli_lat - bus_lat
+
+    a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
+    print(a)
+    distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    return distance
 
 
 #Testing
