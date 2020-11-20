@@ -4,8 +4,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 //import img1 from '../../static/undrawOnlineGroceries.svg';
 //import img2 from '../../static/undrawOnlineGroceriesAccent.svg';
-import placeholderImg from '../../static/undrawHealthyOptionsAccent.svg';
-
+import placeholderImg from '../../static/3957701.jpg';
+import DashboardMenu from './dashboardMenu';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     height: '25vh',
     borderRadius: '20px'
   },
+  innerPaperPlaceholderImg: {
+    height: '25vh',
+    borderRadius: '20px'
+  },
   innerPaperMenu: {
     padding: theme.spacing(2),
     height: '55vh',
@@ -32,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '20px'
   },
   placeholderImg: {
-    padding: theme.spacing(2),
     width: '100%',
     height: '100%',
+    borderRadius: '20px'
   }
 }));
 
@@ -54,7 +58,7 @@ export default function DashboardCards() {
             <Grid container spacing={3}>
               {/* Image Card */}
               <Grid item xs={6} >
-                <Paper className={classes.innerPaper} elevation={5}>
+                <Paper className={classes.innerPaperPlaceholderImg} elevation={5}>
                   <img src={placeholderImg} alt="jash" className={classes.placeholderImg}/>
                 </Paper>
               </Grid>
@@ -64,10 +68,10 @@ export default function DashboardCards() {
                   Statistics Stuff with an image
                 </Paper>
               </Grid>
-              {/* Menu Items Display Card */}
+              {/* Order Items Display Card */}
               <Grid item xs={12} >
                 <Paper className={classes.innerPaperMenu} elevation={5}>
-                  A
+                  Orders
                 </Paper>
               </Grid>
             </Grid>
@@ -76,9 +80,10 @@ export default function DashboardCards() {
         {/* Right Section */}
         <Grid container xs={4}>
           <Paper className={classes.paper}>
+            {/* Menu items display Card */}
             <Grid item>
               <Paper className={classes.innerPaperOrders} elevation={5}>
-              B  
+                <DashboardMenu />  
               </Paper>  
             </Grid>            
           </Paper>

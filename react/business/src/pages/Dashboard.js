@@ -4,7 +4,7 @@ import SideNav from './components/SideNav';
 import TopNav from './components/TopNav';
 import DashboardCards from './components/DashboardCards';
 
-import Typography from '@material-ui/core/Typography';
+//import Typography from '@material-ui/core/Typography';
 
 const drawerWidth = 240;
 
