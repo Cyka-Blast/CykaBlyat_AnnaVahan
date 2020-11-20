@@ -1,3 +1,4 @@
+from enum import unique
 from os import name
 from flask import Flask, request, jsonify
 from flask import json
@@ -49,9 +50,27 @@ class Business(db.Model):
 #Init client class and model
 class Client(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(20))
-    latitude = db.Column(db.String(20), nullable= False)
+    name = db.Column(db.String(20), unique = True)
+    latitude = db.Column(db.String(20), nullable = False)
     longitude = db.Column(db.String(20), nullable = False)    
+
+
+#Init order class and model
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    client_id = db.Column(db.Integer)
+    bus_id = db.Column(db.Integer)
+    c_latitude = db.Column(db.String(20))
+    c_longitude = db.Column(db.String(20))
+    ofoods = db.relationship('Ofood', backref = 'order')
+
+
+#Init ordedfoodlist class and model
+class Ofood(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    food_id = db.Column(db.Integer)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+
 
 #Schema
 class foodSchema(ma.Schema):
@@ -62,10 +81,18 @@ class businessSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'address', 'latitude', 'longitude')
 
-
 class clientSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'latitude', 'longitude')
+
+class orderSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'client_id', 'bus_id', 'c_latitude', 'c_longitude')
+
+class ofoodSchema(ma.Schema):
+    class Meta:
+        fields = ('food_id', 'order_id')
+
 
 
 #Init Schema
@@ -75,15 +102,23 @@ foods_schema = foodSchema(many = True)
 business_Schema = businessSchema()
 morebusiness_Schema = businessSchema(many = True)
 
+client_schema = clientSchema()
+clients_schema = clientSchema(many = True)
+
+order_schema = orderSchema()
+orders_schema = orderSchema(many = True)
+
+ofood_schema = ofoodSchema()
+ofoods_schema = ofoodSchema(many = True)
 
 #Input food item
 @app.route('/food', methods=['POST'])
 def add_food():
     name = request.json["name"]
     price = int(request.json["price"])*100
-    tmpowner = request.json["owner"]
-    print(tmpowner)
-    owner = Business.query.filter_by(name = tmpowner).first()
+    tmpownerid = request.json["owner"] #parse the owner
+    print(tmpownerid)
+    owner = Business.query.filter_by(id = tmpownerid).first() #fetch the owner
 
     nfood = Food(name = name, price = price, owner = owner)
 
@@ -91,7 +126,6 @@ def add_food():
     db.session.commit()
 
     return food_schema.jsonify(nfood)
-
 
 #Fetch a list of foods
 @app.route('/food', methods=['GET'])
@@ -116,13 +150,6 @@ def add_business():
 
     return business_Schema.jsonify(nbus)
 
-
-@app.route('/client', methods=['GET'])
-def get_client():
-    id = 1
-    client = Client.query.filter_by(id)
-    return clientSchema.jsonify(client)
-
 #Fetch a list of businesses
 @app.route('/business', methods=['GET'])
 def get_business():
@@ -131,6 +158,64 @@ def get_business():
     return jsonify(result)
 
 
+#Add client
+@app.route('/client', methods=['POST'])
+def add_client():
+    name = request.json["name"]
+    latitude = request.json["latitude"]
+    longitude = request.json["longitude"]
+
+    n_client = Client(name = name, latitude = latitude, longitude = longitude)
+
+    db.session.add(n_client)
+    db.session.commit()
+    
+    return client_schema.jsonify(n_client)
+
+#Get client
+@app.route('/client', methods=['GET'])
+def get_client():
+    name = request.json["name"]
+    client = Client.query.filter_by(name = name)
+    
+    result = clients_schema.dump(client)
+    return jsonify(result)
+
+
+#Add order
+@app.route('/order', methods=['POST'])
+def add_order():
+    client_id = request.json["client"]
+    bus_id = request.json["restaurant"]
+    food_list = request.json["foodList"]
+    c_latitude = request.json["latitude"]
+    c_longitude = request.json["longitude"]
+
+    n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, c_longitude = c_longitude)
+
+    db.session.add(n_order)
+    db.session.commit()
+
+    for food_id in food_list:
+        n_ofood = Ofood(food_id = food_id, order = n_order)
+        db.session.add(n_ofood)
+        db.session.commit()
+
+    return order_schema.jsonify(n_order)
+
+#Fetch a list of orders
+@app.route('/order', methods=['GET'])
+def get_order():
+    allorders = Order.query.all()
+    result = orders_schema.dump(allorders)
+    return jsonify(result)
+
+#Fetch a list of ordered food
+@app.route('/ofood', methods=['GET'])
+def get_ofood():
+    all_ofood = Ofood.query.all()
+    result = ofoods_schema.dump(all_ofood)
+    return jsonify(result)
 
 
 #Testing
