@@ -88,6 +88,7 @@ class Deli(db.Model):
     name = db.Column(db.String(20))
     deli_lat = db.Column(db.String(20))
     deli_long = db.Column(db.String(20))
+    phone = db.Column(db.String(15))
 
 
 #Schema
@@ -117,7 +118,7 @@ class comSchema(ma.Schema):
 
 class deliSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'deli_lat', 'deli_long')
+        fields = ('id', 'name', 'deli_lat', 'deli_long', 'phone')
 
 
 #Init Schema
@@ -258,25 +259,34 @@ def add_order():
         db.session.add(n_ofood)
         db.session.commit()
 
-    bus = Business.query.get(bus_id).jsonify()
-    bus_lat = bus["latitude"]
-    bus_long = bus["longitude"]
+    # alldelis = Deli.query.all()
+    # result = delis_schema.dump(alldelis)
+    # delis = jsonify(result)
     
+    # obus = Business.query.filter_by(id = bus_id).first()
+    # rbus = business_Schema.dump(obus)
+    # bus = jsonify(rbus)
+    # print(bus)
+    # bus_lat = bus["latitude"]
+    # bus_long = bus["longitude"]
     
-        def get_deli_distance(bus_lat = bus_lat, bus_long = bus_long, deli_lat, deli_long):
-            bus_lat = math.radians(bus_lat)
-            bus_long = math.radians(bus_long)
-            deli_lat = math.radians(deli_lat)
-            deli_long = math.radians(deli_long)
+    # for x in delis:
+    #     lat = x["deli_lat"]
+    #     long = x["deli_long"]
+    #     def get_deli_distance(bus_lat = bus_lat, bus_long = bus_long, deli_lat = lat, deli_long = long):
+    #         bus_lat = math.radians(bus_lat)
+    #         bus_long = math.radians(bus_long)
+    #         deli_lat = math.radians(deli_lat)
+    #         deli_long = math.radians(deli_long)
 
-            dlon = deli_long - bus_long
-            dlat = deli_lat - bus_lat
+    #         dlon = deli_long - bus_long
+    #         dlat = deli_lat - bus_lat
 
-            a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
-            print(a)
-            distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    #         a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
+    #         print(a)
+    #         distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-            return distance
+    #         print ( {x["id"]: distance} )
 
 
     
@@ -304,8 +314,9 @@ def add_deli():
     name = request.json['name']
     deli_lat = request.json['latitude']
     deli_long = request.json['longitude']
+    phone = request.json["phone"]
 
-    n_deli = Deli(name = name, deli_lat = deli_lat, deli_long = deli_long)
+    n_deli = Deli(name = name, deli_lat = deli_lat, deli_long = deli_long, phone = phone)
     db.session.add(n_deli)
     db.session.commit()
     return deli_schema.jsonify(n_deli)
@@ -324,6 +335,17 @@ def up_deli(id):
 
     return deli_schema.jsonify(c_deli)
 
+
+
+
+# #Testing deli selection
+# @app.route('/odeli', methods=["GET"])
+# def o_deli():
+#     odeli = Deli.query.all()
+#     result = 
+
+
+
 #View delivery
 @app.route('/deli', methods=['GET'])
 def get_deli():
@@ -331,20 +353,20 @@ def get_deli():
     result = delis_schema.dump(alldelis)
     return jsonify(result)
 
-def get_deli_distance(bus_lat,bus_long,deli_lat,deli_long):
-    bus_lat = math.radians(bus_lat)
-    bus_long = math.radians(bus_long)
-    deli_lat = math.radians(deli_lat)
-    deli_long = math.radians(deli_long)
+# def get_deli_distance(bus_lat,bus_long,deli_lat,deli_long):
+#     bus_lat = math.radians(bus_lat)
+#     bus_long = math.radians(bus_long)
+#     deli_lat = math.radians(deli_lat)
+#     deli_long = math.radians(deli_long)
 
-    dlon = deli_long - bus_long
-    dlat = deli_lat - bus_lat
+#     dlon = deli_long - bus_long
+#     dlat = deli_lat - bus_lat
 
-    a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
-    print(a)
-    distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+#     a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
+#     print(a)
+#     distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-    return distance
+#     return distance
 
 
 #Testing
