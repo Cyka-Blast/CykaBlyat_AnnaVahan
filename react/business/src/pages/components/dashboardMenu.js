@@ -12,14 +12,13 @@ class DashboardMenu extends Component {
     console.log(this.props.food)
   }
 
-
   render() {
 
     const food = this.props.food;
     
     return (
       <div>
-        <b>Menu</b>
+        <h2>Inventory</h2>
         <Divider />
         <DashboardMenuTable foodList={food}/>
       </div>

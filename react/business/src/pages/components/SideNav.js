@@ -58,7 +58,7 @@ export default function SideNav() {
         anchor="left"
       >
         <Container className={classes.topContainer}>
-          <Typography variant="h5" align="left" gutterBottom="true">Dashboard</Typography>
+          <Typography variant="h5" align="left" gutterBottom="true">Business</Typography>
         </Container>
         <div className={classes.toolbar} />
         <Divider />

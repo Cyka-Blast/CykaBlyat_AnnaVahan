@@ -7,15 +7,19 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
 import { useSelector } from 'react-redux';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 6,
     boxShadow: "0",
+    padding: theme.spacing(2),
+    textAlign: 'center',
   },
-});
+}));
 
 export default function CommodityTable() {
 
@@ -24,13 +28,15 @@ export default function CommodityTable() {
 
   return (
     <div>
-      Commodities
-      <TableContainer component={Paper}>
+      <h3>Commodities</h3>
+      <Divider />
+      <br />
+      <TableContainer component={Paper} elevation={5}>
         <Table stickyHeader className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
             <TableCell><b>ID</b></TableCell>  
-              <TableCell><b>Commodity</b></TableCell>              
+              <TableCell align="right"><b>Commodity</b></TableCell>              
               <TableCell align="right"><b>Price</b></TableCell>
             </TableRow>
           </TableHead>

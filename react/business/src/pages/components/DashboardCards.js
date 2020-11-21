@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-//import img1 from '../../static/undrawOnlineGroceries.svg';
-//import img2 from '../../static/undrawOnlineGroceriesAccent.svg';
 import placeholderImg from '../../static/3957701.jpg';
 import statsImg from '../../static/undrawVisualData.svg';
 import DashboardMenu from './dashboardMenu';
@@ -12,7 +10,6 @@ import DashboardOrder from './dashboardOrder';
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
     height: '85vh',
     width: '100%',
     border: 'none',

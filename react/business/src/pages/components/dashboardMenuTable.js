@@ -23,7 +23,7 @@ export default function DashboardMenuTable(props) {
 
   return (
     <div>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={0}>
         <Table stickyHeader className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>

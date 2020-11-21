@@ -21,23 +21,25 @@ export default function DashboardOrderTable(props) {
 
   return (
     <div>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={0}>
         <Table stickyHeader className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell><b>Client</b></TableCell>
+              <TableCell><b>Order ID</b></TableCell>
               <TableCell align="right"><b>Food</b></TableCell>
               <TableCell align="right"><b>Price</b></TableCell>
+              <TableCell align="right"><b>Qty.</b></TableCell>
               <TableCell align="right"><b>Status</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {props.orderList.map((order) => (
-              <TableRow key={order.client}>
+              <TableRow key={order.order_id}>
                 <TableCell component="th" scope="row">
-                  {order.client}
+                  {order.order_id}
                 </TableCell>
-                <TableCell align="right">{order.foodList}</TableCell>
+                <TableCell align="right">{order.food}</TableCell>
+                <TableCell align="right">{order.qty}</TableCell>
                 <TableCell align="right">{order.price}</TableCell>
                 <TableCell align="right">{order.status}</TableCell>
               </TableRow>

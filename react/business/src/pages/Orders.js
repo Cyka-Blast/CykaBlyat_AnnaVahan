@@ -4,7 +4,7 @@ import OrdersTable from './components/ordersTable'
 export default function Orders() {
   return (
     <div>
-      Orders
+      <h2>Orders</h2>
       <OrdersTable />
     </div>
   )

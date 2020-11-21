@@ -7,10 +7,10 @@ import Divider from '@material-ui/core/Divider';
 
 class DashboardOrder extends Component {
 
-  /*componentDidMount() {
-    this.props.getFoodList();
-    //console.log(this.props.food)
-  }*/
+  componentDidMount() {
+    this.props.getOrderList();
+    console.log(this.props.food)
+  }
 
 
   render() {
@@ -19,7 +19,7 @@ class DashboardOrder extends Component {
     
     return (
       <div>
-        <b>Order</b>
+        <h2>Orders</h2>
         <Divider />
         <DashboardOrderTable orderList={orders}/>
       </div>
