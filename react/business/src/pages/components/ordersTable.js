@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Modal from '@material-ui/core/Modal';
+import axios from "axios";
 
 import { useSelector } from 'react-redux';
 
@@ -49,6 +50,12 @@ export default function OrdersTable() {
   const store = useSelector(state => state);
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [Status, updateStatus  ] = useState(0);
+
+  useEffect(() => {
+    console.log("PUT")
+    axios.put('http://localhost:5000/status/2', { status: 'Ready' }).catch(error => console.log(error));;
+  }, [Status])
 
   const handleOpen = () => {
     setOpen(true);
@@ -88,7 +95,7 @@ export default function OrdersTable() {
                 <TableCell align="right">{order.food_id}</TableCell>
                 <TableCell align="right">{order.qty}</TableCell>
                 <TableCell align="right">
-                  <IconButton aria-label="Edit Status" onClick={handleOpen} >
+                  <IconButton aria-label="Edit Status" onClick={() => updateStatus(Status+1)} >
                     <EditIcon />
                   </IconButton>    
                   {order.status} 
