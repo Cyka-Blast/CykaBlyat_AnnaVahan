@@ -62,6 +62,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     client_id = db.Column(db.Integer)
     bus_id = db.Column(db.Integer)
+    deli_id = db.Column(db.Integer, nullable = True)
     c_latitude = db.Column(db.String(20))
     c_longitude = db.Column(db.String(20))
     ofoods = db.relationship('Ofood', backref = 'order')
@@ -107,7 +108,7 @@ class clientSchema(ma.Schema):
 
 class orderSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'client_id', 'bus_id', 'c_latitude', 'c_longitude', 'status')
+        fields = ('id', 'client_id', 'bus_id', 'deli_id', 'c_latitude', 'c_longitude', 'status')
 
 class ofoodSchema(ma.Schema):
     class Meta:
@@ -245,12 +246,13 @@ def get_client():
 def add_order():
     client_id = request.json["client"]
     bus_id = request.json["restaurant"]
+    deli_id = get_best_deli(bus_id)
     food_list = request.json["foodList"]
     c_latitude = request.json["latitude"]
     c_longitude = request.json["longitude"]
     status = request.json["status"]
 
-    n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, c_longitude = c_longitude, status = status)
+    n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, deli_id=deli_id, c_longitude = c_longitude, status = status)
     print(request.json)
     db.session.add(n_order)
     db.session.commit()
@@ -260,38 +262,38 @@ def add_order():
         n_ofood = Ofood(food_id = food_id, order = n_order, qty = food_quantity)
         db.session.add(n_ofood)
         db.session.commit()
-
-    # alldelis = Deli.query.all()
-    # result = delis_schema.dump(alldelis)
-    # delis = jsonify(result)
     
-    # obus = Business.query.filter_by(id = bus_id).first()
-    # rbus = business_Schema.dump(obus)
-    # bus = jsonify(rbus)
-    # print(bus)
-    # bus_lat = bus["latitude"]
-    # bus_long = bus["longitude"]
-    
-    # for x in delis:
-    #     lat = x["deli_lat"]
-    #     long = x["deli_long"]
-    #     def get_deli_distance(bus_lat = bus_lat, bus_long = bus_long, deli_lat = lat, deli_long = long):
-    #         bus_lat = math.radians(bus_lat)
-    #         bus_long = math.radians(bus_long)
-    #         deli_lat = math.radians(deli_lat)
-    #         deli_long = math.radians(deli_long)
-
-    #         dlon = deli_long - bus_long
-    #         dlat = deli_lat - bus_lat
-
-    #         a = math.sin(dlat / 2)**2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)**2
-    #         print(a)
-    #         distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    #         print ( {x["id"]: distance} )
-
     return order_schema.jsonify(n_order)
 
+def get_best_deli(bus_id):
+    def get_deli_distance(bus_lat , bus_long , deli_lat, deli_long):
+        bus_lat = math.radians(bus_lat)
+        bus_long = math.radians(bus_long)
+        deli_lat = math.radians(deli_lat)
+        deli_long = math.radians(deli_long)
+        dlon = abs(deli_long - bus_long)
+        dlat = abs(deli_lat - bus_lat)
+        a = math.sin(dlat / 2)*2 + math.cos(bus_lat) * math.cos(deli_lat) * math.sin(dlon / 2)*2
+        distance = 6373.0 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        return distance
+    alldelis = Deli.query.all()
+    delis = delis_schema.dump(alldelis)
+
+    obus = Business.query.filter_by(id = bus_id).first()
+    rbus = business_Schema.dump(obus)
+    bus = jsonify(rbus)
+    print(rbus,flush=True)
+    bus_lat = float(rbus["latitude"])
+    bus_long = float(rbus["longitude"])
+    min_dist = (None,10000000)
+    for x in delis:
+        lat = float(x["deli_lat"])
+        long = float(x["deli_long"])
+        dist = get_deli_distance(bus_lat, bus_long, lat, long)
+        if min_dist[1]>dist:
+            min_dist = (x['id'],dist)
+    print(min_dist)
+    return min_dist[0]
 #Fetch a list of orders
 @app.route('/order', methods=['GET'])
 def get_order():
@@ -373,6 +375,13 @@ def get_deli():
 
 #     return distance
 
+
+#Reset database
+@app.route('/reset', methods=['GET'])
+def reset():
+    from dummy import clean
+    clean()
+    return jsonify('Done')
 
 #Testing
 @app.route('/', methods=['GET'])
