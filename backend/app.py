@@ -65,6 +65,7 @@ class Order(db.Model):
     c_latitude = db.Column(db.String(20))
     c_longitude = db.Column(db.String(20))
     ofoods = db.relationship('Ofood', backref = 'order')
+    status = db.Column(db.String(20), nullable = True)
 
 
 #Init ordedfoodlist class and model
@@ -106,7 +107,7 @@ class clientSchema(ma.Schema):
 
 class orderSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'client_id', 'bus_id', 'c_latitude', 'c_longitude')
+        fields = ('id', 'client_id', 'bus_id', 'c_latitude', 'c_longitude', 'status')
 
 class ofoodSchema(ma.Schema):
     class Meta:
@@ -296,6 +297,22 @@ def get_order():
     allorders = Order.query.all()
     result = orders_schema.dump(allorders)
     return jsonify(result)
+
+
+#Update status of order
+@app.route('/status/<id>', methods=['PUT'])
+def upd_status(id):
+    s_order = Order.query.get(id)
+    status = request.json["status"]
+
+    s_order.status = status
+
+    db.session.commit()
+
+    return order_schema.jsonify(s_order)
+
+
+
 
 #Fetch a list of ordered food
 @app.route('/ofood', methods=['GET'])
