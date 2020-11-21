@@ -288,9 +288,6 @@ def add_order():
 
     #         print ( {x["id"]: distance} )
 
-
-    
-
     return order_schema.jsonify(n_order)
 
 #Fetch a list of orders
@@ -334,16 +331,6 @@ def up_deli(id):
     db.session.commit()
 
     return deli_schema.jsonify(c_deli)
-
-
-
-
-# #Testing deli selection
-# @app.route('/odeli', methods=["GET"])
-# def o_deli():
-#     odeli = Deli.query.all()
-#     result = 
-
 
 
 #View delivery
