@@ -19,6 +19,7 @@ class _RestaurantState extends State<Restaurant> {
   @override
   Widget build(BuildContext context) {
     Business restaurant = ModalRoute.of(context).settings.arguments;
+    order.food = {};
     return Scaffold(
       appBar: appBar,
       body: SafeArea(

@@ -56,7 +56,10 @@ Future<List<Order>> getOrderRequest()async{
       r_latitude: r_lat,
       r_longitude: r_long,
     );
-    restaurants.add(order);
+    print(t_order['deli_id']);
+    if(t_order['deli_id']==1) {
+       restaurants.add(order);
+    }
   }
   print('updated');
   return restaurants;

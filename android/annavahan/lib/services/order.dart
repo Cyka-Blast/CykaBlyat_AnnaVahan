@@ -49,6 +49,7 @@ class Order{
       "client":this.clientId.toString(),
       "restaurant":this.resId.toString(),
       "foodList": food,
+      'status': 'pending',
       "latitude":this.latitude.toString(),
       "longitude":this.longitude.toString()
     };

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:annavahan/properties.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
@@ -18,7 +19,7 @@ class Food{
 
 Future<List<Food>> getFoodRequest()async{
   List<Food> foods = [];
-  Response response = await get('http://10.0.2.2:5000/food');
+  Response response = await get('${properties.baseURL}/food');
   List data = jsonDecode(response.body);
   for(int i=0;i<data.length;i++){
     Map t_food=data[i];

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:annavahan_delivery/properties.dart';
 import 'package:http/http.dart';
 
 class Business {
@@ -14,7 +15,7 @@ class Business {
 
 Future<List<Business>> getRestaurantRequest() async {
   List<Business> restaurants = [];
-  Response response = await get('http://10.0.2.2:5000/business');
+  Response response = await get('${properties.baseURL}/business');
   List data = jsonDecode(response.body);
   for (int i = 0; i < data.length; i++) {
     Map t_rest = data[i];
