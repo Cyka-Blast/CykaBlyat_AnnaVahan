@@ -9,7 +9,7 @@ class DashboardMenu extends Component {
 
   componentDidMount() {
     this.props.getFoodList();
-    //console.log(this.props.food)
+    console.log(this.props.food)
   }
 
 

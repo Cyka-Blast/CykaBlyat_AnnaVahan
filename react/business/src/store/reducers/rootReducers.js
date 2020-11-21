@@ -1,9 +1,10 @@
 
 const initState = {
   user: {
-    name: 'Leslie Knope',
-    address: 'Parks and Recreation Department, Pawney',
-    location: 'lat, long'
+    name: 'food3',
+    address: 'adressfs',
+    latitude: "324",
+    longitude: "24"
   },
 
   food: [
@@ -41,7 +42,7 @@ const rootReducer = (state = initState, action) => {
   if(action.type === "SET_FOOD_LIST") {
     return {
       ...state,
-      food: [...state.food, action.foodList]
+      food: [...state.food, ...action.foodList]
     }
   }
   else {

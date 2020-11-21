@@ -9,10 +9,11 @@ export function getFoodList() {
 }
 
 export function setFoodList(data) {
-  console.log(data)
-  food = data
+  const food = data.filter((item) => {
+    return item.owner_id === 1
+  })
   return {
     type: "SET_FOOD_LIST",
-    foodList: data
+    foodList: food
   }
 }

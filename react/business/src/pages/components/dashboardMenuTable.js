@@ -12,6 +12,8 @@ const useStyles = makeStyles({
   table: {
     minWidth: 6,
     boxShadow: "0",
+    maxHeight: "50vh",
+    overflow: "scroll"
   },
 });
 
@@ -25,8 +27,8 @@ export default function DashboardMenuTable(props) {
         <Table stickyHeader className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell><b>Name</b></TableCell>
-              <TableCell align="right"><b>Price</b></TableCell>
+              <TableCell component="h3"><b>Name</b></TableCell>
+              <TableCell component="h3" align="right"><b>Price</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
