@@ -248,8 +248,9 @@ def add_order():
     food_list = request.json["foodList"]
     c_latitude = request.json["latitude"]
     c_longitude = request.json["longitude"]
+    status = request.json["status"]
 
-    n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, c_longitude = c_longitude)
+    n_order = Order(client_id = client_id, bus_id = bus_id, c_latitude = c_latitude, c_longitude = c_longitude, status = status)
     print(request.json)
     db.session.add(n_order)
     db.session.commit()
